@@ -1,0 +1,16 @@
+# Ignore specific folders (always end with a slash)
+node_modules/
+dist/
+build/
+
+# Ignore sensitive environmental files containing API keys/secrets
+.env
+.env.local
+
+# Ignore OS-generated files
+.DS_Store
+Thumbs.db
+
+# Ignore all files ending with a specific extension
+*.log
+*.tmp

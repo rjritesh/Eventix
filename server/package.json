@@ -1,0 +1,16 @@
+{
+  "name": "eventix",
+  "version": "1.0.0",
+  "description": "AN Event management platform.",
+  "license": "ISC",
+  "author": "Ritesh",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
