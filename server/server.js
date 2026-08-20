@@ -8,6 +8,12 @@ app.get("/",(req, res)=>{
 })
 
 
+app.post("/signup", ( req, res )=>{
+    if(!req.body){
+        return res.send("Requst body is missing!!!!")
+    }
+    res.send("Signup request received!!!")
+})
 
 
 app.listen(2000, ()=>{
