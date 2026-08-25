@@ -1,30 +1,41 @@
 const express = require("express");
 const mongoose = require("mongoose");
-
+const validator = require("validator");
 const app = express();
 app.use(express.json());
-
 const dns = require("dns");
-
 dns.setServers(["1.1.1.1", "8.8.8.8"]);
+
+
+
 
 mongoose.connect(
   "mongodb+srv://riteshDev:2Gi92nbmkNkMc3As@namastenode.xwcial4.mongodb.net/DevLink",
 );
 
 const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
+  firstName: {
+      type: String,
+      required: true,
+      trim: true,
+      minLength: 4,
+      maxLength: 50,
+    },
+    lastName: {
+      type: String,
+    },
   emailId: {
-    type: String,
-    required: true,
+   type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
   },
-  password: {
-    type: String,
-    required: true,
-  },
+ password: {
+       type: String,
+       required: true,
+       minLength:8,
+     },
 });
 
 const User = mongoose.model("User", userSchema);
@@ -39,6 +50,19 @@ app.post("/signup", async (req, res) => {
     if (!req.body) {
       return res.send("Requst body is missing!!!!");
     }
+    else if(!validator.isEmail(req.body.emailId)){
+      return res.send("Email is not valid")
+    }
+
+    const existingUser = await User.findOne({
+      emailId: req.body.emailId,
+    })
+
+    if(existingUser !== null){
+return res.send("User already exist!!")
+    }
+
+    
     await User.create(req.body);
     res.send("Signup request received!!!");
   } catch (error) {
@@ -46,6 +70,10 @@ app.post("/signup", async (req, res) => {
     res.send("Something Went Wrong!");
   }
 });
+
+
+
+
 
 app.listen(2000, () => {
   console.log("Server is running!!");
