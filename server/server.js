@@ -54,6 +54,11 @@ app.post("/signup", async (req, res) => {
       return res.send("Email is not valid");
     }
 
+
+        if (!validator.isStrongPassword(req.body.password)) {
+      return res.send("Password is not valid!");
+    }
+
     // 3. Check if user already exists
     const existingUser = await User.findOne({
       emailId: req.body.emailId,
@@ -63,12 +68,13 @@ app.post("/signup", async (req, res) => {
       return res.send("User already exists");
     }
 
+
+
     // 4. Create user
     await User.create(req.body);
 
     // 5. Send success response
     res.send("Signup successful");
-
   } catch (error) {
     console.log(error);
     res.send("Something went wrong");
