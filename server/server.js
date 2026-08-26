@@ -1,6 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const validator = require("validator");
+const bcrypt = require("bcrypt");
+
 const app = express();
 app.use(express.json());
 const dns = require("dns");
@@ -54,8 +56,7 @@ app.post("/signup", async (req, res) => {
       return res.send("Email is not valid");
     }
 
-
-        if (!validator.isStrongPassword(req.body.password)) {
+    if (!validator.isStrongPassword(req.body.password)) {
       return res.send("Password is not valid!");
     }
 
@@ -68,8 +69,9 @@ app.post("/signup", async (req, res) => {
       return res.send("User already exists");
     }
 
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-
+    req.body.password = hashedPassword;
     // 4. Create user
     await User.create(req.body);
 
