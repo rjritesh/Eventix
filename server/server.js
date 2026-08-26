@@ -6,36 +6,33 @@ app.use(express.json());
 const dns = require("dns");
 dns.setServers(["1.1.1.1", "8.8.8.8"]);
 
-
-
-
 mongoose.connect(
   "mongodb+srv://riteshDev:2Gi92nbmkNkMc3As@namastenode.xwcial4.mongodb.net/DevLink",
 );
 
 const userSchema = new mongoose.Schema({
   firstName: {
-      type: String,
-      required: true,
-      trim: true,
-      minLength: 4,
-      maxLength: 50,
-    },
-    lastName: {
-      type: String,
-    },
-  emailId: {
-   type: String,
-      required: true,
-      unique: true,
-      lowercase: true,
-      trim: true,
+    type: String,
+    required: true,
+    trim: true,
+    minLength: 4,
+    maxLength: 50,
   },
- password: {
-       type: String,
-       required: true,
-       minLength:8,
-     },
+  lastName: {
+    type: String,
+  },
+  emailId: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true,
+  },
+  password: {
+    type: String,
+    required: true,
+    minLength: 8,
+  },
 });
 
 const User = mongoose.model("User", userSchema);
@@ -47,33 +44,36 @@ app.get("/", (req, res) => {
 
 app.post("/signup", async (req, res) => {
   try {
-    if (!req.body) {
-      return res.send("Requst body is missing!!!!");
-    }
-    else if(!validator.isEmail(req.body.emailId)){
-      return res.send("Email is not valid")
+    // 1. Check required fields
+    if (!req.body.firstName || !req.body.emailId || !req.body.password) {
+      return res.send("Required fields are missing");
     }
 
+    // 2. Validate email format
+    if (!validator.isEmail(req.body.emailId)) {
+      return res.send("Email is not valid");
+    }
+
+    // 3. Check if user already exists
     const existingUser = await User.findOne({
       emailId: req.body.emailId,
-    })
+    });
 
-    if(existingUser !== null){
-return res.send("User already exist!!")
+    if (existingUser !== null) {
+      return res.send("User already exists");
     }
 
-    
+    // 4. Create user
     await User.create(req.body);
-    res.send("Signup request received!!!");
+
+    // 5. Send success response
+    res.send("Signup successful");
+
   } catch (error) {
     console.log(error);
-    res.send("Something Went Wrong!");
+    res.send("Something went wrong");
   }
 });
-
-
-
-
 
 app.listen(2000, () => {
   console.log("Server is running!!");
