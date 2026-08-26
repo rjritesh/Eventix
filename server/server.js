@@ -83,6 +83,28 @@ app.post("/signup", async (req, res) => {
   }
 });
 
+app.post("/login", async (req, res) => {
+  try {
+    const { emailId, password } = req.body;
+    if (!emailId || !password) {
+      return res.send("Required field is missing");
+    }
+
+    const user = await User.findOne({ emailId });
+    if (!user) {
+      return res.send("User not found");
+    }
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.send("Password is not valid.");
+    }
+
+    return res.send("Login Successfull");
+  } catch (error) {
+    return res.send("something went wrong");
+  }
+});
+
 app.listen(2000, () => {
   console.log("Server is running!!");
 });
