@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const validator = require("validator");
+const jwt      = require("jsonwebtoken")
 const bcrypt = require("bcrypt");
 
 const app = express();
@@ -44,6 +45,8 @@ app.get("/", (req, res) => {
   console.log(req.url);
 });
 
+
+const SECRET_KEY = "mySecretKey";
 app.post("/signup", async (req, res) => {
   try {
     // 1. Check required fields
@@ -99,7 +102,15 @@ app.post("/login", async (req, res) => {
       return res.send("Password is not valid.");
     }
 
-    return res.send("Login Successfull");
+
+    const token = jwt.sign({emailId}, SECRET_KEY)
+
+
+
+    return res.send({
+      message : "Login Successfull",
+      token : token,
+    });
   } catch (error) {
     return res.send("something went wrong");
   }
