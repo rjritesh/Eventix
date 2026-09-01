@@ -105,7 +105,7 @@ app.post("/login", async (req, res) => {
 
     const token = jwt.sign({emailId}, SECRET_KEY)
 
-
+     res.cookie("token", token)
 
     return res.send({
       message : "Login Successfull",
@@ -115,7 +115,7 @@ app.post("/login", async (req, res) => {
     return res.send("something went wrong");
   }
 });
-
++
 
 
 
