@@ -2,10 +2,12 @@ const express = require("express");
 const mongoose = require("mongoose");
 const validator = require("validator");
 const jwt      = require("jsonwebtoken")
+const cookieParser = require("cookie-parser")
 const bcrypt = require("bcrypt");
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser())
 const dns = require("dns");
 dns.setServers(["1.1.1.1", "8.8.8.8"]);
 
@@ -117,7 +119,14 @@ app.post("/login", async (req, res) => {
 });
 +
 
+app.get("/profile", async (req, res) => {
 
+  const {token} = req.cookies;
+  const decoded = jwt.verify(token, SECRET_KEY)
+const user = await User.findOne({emailId: decoded.emailId})
+    console.log(user);
+    res.send("Profile");
+});
 
 
 
