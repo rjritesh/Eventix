@@ -13,9 +13,6 @@ app.use(cookieParser());
 const dns = require("dns");
 dns.setServers(["1.1.1.1", "8.8.8.8"]);
 
-mongoose.connect(
-  "mongodb+srv://riteshDev:2Gi92nbmkNkMc3As@namastenode.xwcial4.mongodb.net/DevLink",
-);
 
 
 
