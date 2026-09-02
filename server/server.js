@@ -1,13 +1,15 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const validator = require("validator");
-const jwt      = require("jsonwebtoken")
-const cookieParser = require("cookie-parser")
+const userAuth = require("./middleware/auth")
+const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
 const bcrypt = require("bcrypt");
+const User = require("./model/User")
 
 const app = express();
 app.use(express.json());
-app.use(cookieParser())
+app.use(cookieParser());
 const dns = require("dns");
 dns.setServers(["1.1.1.1", "8.8.8.8"]);
 
@@ -15,38 +17,12 @@ mongoose.connect(
   "mongodb+srv://riteshDev:2Gi92nbmkNkMc3As@namastenode.xwcial4.mongodb.net/DevLink",
 );
 
-const userSchema = new mongoose.Schema({
-  firstName: {
-    type: String,
-    required: true,
-    trim: true,
-    minLength: 4,
-    maxLength: 50,
-  },
-  lastName: {
-    type: String,
-  },
-  emailId: {
-    type: String,
-    required: true,
-    unique: true,
-    lowercase: true,
-    trim: true,
-  },
-  password: {
-    type: String,
-    required: true,
-    minLength: 8,
-  },
-});
 
-const User = mongoose.model("User", userSchema);
 
 app.get("/", (req, res) => {
   res.send("Hello from eventix!!!!");
   console.log(req.url);
 });
-
 
 const SECRET_KEY = "mySecretKey";
 app.post("/signup", async (req, res) => {
@@ -104,33 +80,26 @@ app.post("/login", async (req, res) => {
       return res.send("Password is not valid.");
     }
 
+    const token = jwt.sign({ emailId }, SECRET_KEY);
 
-    const token = jwt.sign({emailId}, SECRET_KEY)
-
-     res.cookie("token", token)
+    res.cookie("token", token);
 
     return res.send({
-      message : "Login Successfull",
-      token : token,
+      message: "Login Successfull",
+      token: token,
     });
   } catch (error) {
     return res.send("something went wrong");
   }
 });
-+
 
-app.get("/profile", async (req, res) => {
 
-  const {token} = req.cookies;
-  const decoded = jwt.verify(token, SECRET_KEY)
-const user = await User.findOne({emailId: decoded.emailId})
-    console.log(user);
-    res.send("Profile");
+
++app.get("/profile",userAuth, async (req, res) => {
+  
+  console.log(req.user);
+  res.send("Profile");
 });
-
-
-
-
 
 app.listen(2000, () => {
   console.log("Server is running!!");
