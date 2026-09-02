@@ -1,7 +1,7 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const validator = require("validator");
 const userAuth = require("./middleware/auth")
+const connectDb = require("./config/database");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const bcrypt = require("bcrypt");
@@ -11,10 +11,13 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 const dns = require("dns");
+
+
+
 dns.setServers(["1.1.1.1", "8.8.8.8"]);
 
 
-
+connectDb()
 
 app.get("/", (req, res) => {
   res.send("Hello from eventix!!!!");
