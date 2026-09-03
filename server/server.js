@@ -3,8 +3,9 @@ const cookieParser = require("cookie-parser");
 const dns = require("dns");
 
 const connectDb = require("./config/database");
-const userAuth = require("./middleware/auth");
+
 const router = require("./routes/auth");
+const profileRouter = require("./routes/profile")
 
 const app = express();
 
@@ -12,6 +13,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api", router);
+app.use("/api", profileRouter);
 
 dns.setServers(["1.1.1.1", "8.8.8.8"]);
 
@@ -22,10 +24,7 @@ app.get("/", (req, res) => {
   console.log(req.url);
 });
 
-app.get("/profile", userAuth, async (req, res) => {
-  console.log(req.user);
-  res.send("Profile");
-});
+
 
 app.listen(2000, () => {
   console.log("Server is running!!");

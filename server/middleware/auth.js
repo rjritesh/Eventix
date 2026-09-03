@@ -6,7 +6,6 @@ const SECRET_KEY = "mySecretKey";
 
 const userAuth = async (req, res, next)=>{
 
-
 try{
 const {token} = req.cookies;
 const decoded = jwt.verify(token, SECRET_KEY)
