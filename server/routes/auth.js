@@ -9,7 +9,11 @@ const router = express.Router();
 
 const SECRET_KEY = "mySecretKey";
 
+
+// --------------------
 // Signup
+// --------------------
+
 router.post("/signup", async (req, res) => {
   try {
     if (!req.body.firstName || !req.body.emailId || !req.body.password) {
@@ -32,20 +36,28 @@ router.post("/signup", async (req, res) => {
       return res.send("User already exists");
     }
 
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    const hashedPassword = await bcrypt.hash(
+      req.body.password,
+      10
+    );
 
     req.body.password = hashedPassword;
 
     await User.create(req.body);
 
     res.send("Signup successful");
+
   } catch (error) {
     console.log(error);
     res.send("Something went wrong");
   }
 });
 
+
+// --------------------
 // Login
+// --------------------
+
 router.post("/login", async (req, res) => {
   try {
     const { emailId, password } = req.body;
@@ -69,7 +81,10 @@ router.post("/login", async (req, res) => {
       return res.send("Password is not valid.");
     }
 
-    const token = jwt.sign({ emailId }, SECRET_KEY);
+    const token = jwt.sign(
+      { emailId },
+      SECRET_KEY
+    );
 
     res.cookie("token", token);
 
@@ -77,9 +92,11 @@ router.post("/login", async (req, res) => {
       message: "Login Successfull",
       token: token,
     });
+
   } catch (error) {
     return res.send("something went wrong");
   }
 });
+
 
 module.exports = router;
