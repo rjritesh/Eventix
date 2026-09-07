@@ -5,7 +5,11 @@ const userAuth = require("../middleware/auth");
 
 router.get("/profile", userAuth, async (req, res) => {
   console.log(req.user);
-  res.send("Profile");
+  res.send({
+    firstName: req.user.firstName,
+    lastName: req.user.lastName,
+    emailId : req.user.emailId,
+  });
 });
 
 
