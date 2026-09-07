@@ -27,6 +27,18 @@ const createEvents = async (req, res)=>{
     }
 }
 
+const getEventsById = async (req, res)=>{
+    try{
+        const {id} = req.params
+        const event = await Events.findById(id);
+        res.send(event)
+    }
+    catch(err){
+        res.send("Event not found")
+    }
+}
+
+
 module.exports = {
-    getEvents, createEvents
+    getEvents, createEvents, getEventsById
 };
