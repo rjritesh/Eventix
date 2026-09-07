@@ -5,6 +5,7 @@ const dns = require("dns");
 const connectDb = require("./config/database");
 const authRouter = require("./routes/auth");
 const profileRouter = require("./routes/profile");
+const  eventsRouter  = require("./routes/events");
 
 const app = express();
 
@@ -23,7 +24,7 @@ app.use(cookieParser());
 
 app.use("/api", authRouter);
 app.use("/api", profileRouter);
-
+app.use("/api", eventsRouter)
 
 // --------------------
 // DNS & Database
