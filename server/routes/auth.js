@@ -9,7 +9,6 @@ const router = express.Router();
 
 const SECRET_KEY = "mySecretKey";
 
-
 // --------------------
 // Signup
 // --------------------
@@ -36,23 +35,18 @@ router.post("/signup", async (req, res) => {
       return res.send("User already exists");
     }
 
-    const hashedPassword = await bcrypt.hash(
-      req.body.password,
-      10
-    );
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
     req.body.password = hashedPassword;
 
     await User.create(req.body);
 
     res.send("Signup successful");
-
   } catch (error) {
     console.log(error);
     res.send("Something went wrong");
   }
 });
-
 
 // --------------------
 // Login
@@ -72,19 +66,13 @@ router.post("/login", async (req, res) => {
       return res.send("User not found");
     }
 
-    const isPasswordValid = await bcrypt.compare(
-      password,
-      user.password
-    );
+    const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
       return res.send("Password is not valid.");
     }
 
-    const token = jwt.sign(
-      { emailId },
-      SECRET_KEY
-    );
+    const token = jwt.sign({ emailId }, SECRET_KEY);
 
     res.cookie("token", token);
 
@@ -92,11 +80,18 @@ router.post("/login", async (req, res) => {
       message: "Login Successfull",
       token: token,
     });
-
   } catch (error) {
     return res.send("something went wrong");
   }
 });
 
+router.post("/logout",  (req, res) => {
+  try {
+    res.clearCookie("token");
+    res.send("Logout successful");
+  } catch (error) {
+    res.send(error)
+  }
+});
 
 module.exports = router;
