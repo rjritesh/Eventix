@@ -3,7 +3,7 @@ const Events = require("../model/Events");
 const getEvents = async (req, res) => {
   const events = await Events.find();
   if(events.length === 0){
-    res.send("Events not found!")
+    return res.send("Events not found!")
   }
   res.send(events);
 };
