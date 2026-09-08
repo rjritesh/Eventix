@@ -63,7 +63,16 @@ const updateEventsById = async (req, res) => {
   }
 };
 
-
+const deleteEvents = async (req, res) =>{
+  try{
+      const {id} = req.params;
+    await Events.findByIdAndDelete(id);
+    res.send("Event deleted sucessfully")
+  }
+  catch(error){
+    res.send("Failed to delete the event")
+  }
+}
 
 
 module.exports = {
