@@ -1,27 +1,20 @@
-const User = require("../model/User")
-const jwt = require("jsonwebtoken")
+const User = require("../model/User");
+const jwt = require("jsonwebtoken");
 
 const SECRET_KEY = "mySecretKey";
 
+const userAuth = async (req, res, next) => {
+  try {
+    const { token } = req.cookies;
+    const decoded = jwt.verify(token, SECRET_KEY);
 
-const userAuth = async (req, res, next)=>{
+    const user = await User.findOne({ emailId: decoded.emailId });
 
-try{
-        console.log("USER AUTH RUNNING");
-const {token} = req.cookies;
-const decoded = jwt.verify(token, SECRET_KEY)
+    req.user = user;
+    next();
+  } catch (error) {
+    res.send("Invalid token");
+  }
+};
 
-const user = await User.findOne({emailId: decoded.emailId})
-console.log("decoded:", decoded);
-console.log("user:", user);
-req.user = user;
-next()
-}
-catch(error){
-    res.send("Invalid token")
-}
-
-
-}
-
-module.exports = userAuth
+module.exports = userAuth;
