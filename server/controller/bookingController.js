@@ -69,8 +69,37 @@ const getMyBookingById = async (req, res) => {
 };
 
 
+const cancelBooking = async (req, res) => {
+  try {
+    const booking = await Booking.findById(req.params.id);
+
+    if (!booking) {
+      return res.send("Booking not found");
+    }
+
+    const event = await Events.findById(booking.event);
+
+    if (!event) {
+      return res.send("Event not found");
+    }
+
+    event.availableSeats = event.availableSeats + booking.seats;
+
+    await event.save();
+
+    await Booking.findByIdAndDelete(req.params.id);
+
+    res.send("Booking cancelled successfully");
+
+  } catch (error) {
+    res.send({
+      message: "Failed to cancel booking",
+      error: error.message
+    });
+  }
+};
 
 module.exports = {
   createBooking,
-  getMyBookings,getMyBookingById
+  getMyBookings,getMyBookingById, cancelBooking
 };
