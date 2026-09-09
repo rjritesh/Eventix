@@ -34,6 +34,22 @@ const createBooking = async (req, res) => {
   }
 };
 
+const getMyBookings = async (req, res) => {
+  try {
+    const bookings = await Booking.find({
+      bookingBy: req.user._id,
+    });
+
+    res.send(bookings);
+  } catch (error) {
+    res.send({
+      message: "Failed to get bookings",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   createBooking,
+  getMyBookings,
 };

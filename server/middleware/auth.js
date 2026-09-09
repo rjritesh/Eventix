@@ -7,11 +7,13 @@ const SECRET_KEY = "mySecretKey";
 const userAuth = async (req, res, next)=>{
 
 try{
+        console.log("USER AUTH RUNNING");
 const {token} = req.cookies;
 const decoded = jwt.verify(token, SECRET_KEY)
 
 const user = await User.findOne({emailId: decoded.emailId})
-
+console.log("decoded:", decoded);
+console.log("user:", user);
 req.user = user;
 next()
 }
