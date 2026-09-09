@@ -49,7 +49,28 @@ const getMyBookings = async (req, res) => {
   }
 };
 
+const getMyBookingById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const mybooking = await Booking.findOne({
+      _id: id,
+      bookingBy: req.user._id
+    });
+
+    if (!mybooking) {
+      return res.send("Booking not found");
+    }
+
+    res.send(mybooking);
+  } catch (error) {
+    res.send("Booking not found");
+  }
+};
+
+
+
 module.exports = {
   createBooking,
-  getMyBookings,
+  getMyBookings,getMyBookingById
 };
