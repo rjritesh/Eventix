@@ -1,5 +1,5 @@
 const express = require("express");
-const userAuth = require("../middleware/auth");
+const {userAuth} = require("../middleware/auth");
 
 const { createBooking, getMyBookings, getMyBookingById, cancelBooking } = require("../controller/bookingController");
 
