@@ -11,7 +11,7 @@ const userAuth = async (req, res, next) => {
     const user = await User.findOne({ emailId: decoded.emailId });
 
     req.user = user;
-    next();_
+    next();
   } catch (error) {
     res.send("Invalid token");
   }

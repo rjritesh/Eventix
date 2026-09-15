@@ -33,6 +33,7 @@ const createEvents = async (req, res) => {
     });
     res.send(event);
   } catch (error) {
+    console.log("error", error)
     res.send({ message: "Server Error", error: error.message });
   }
 };
