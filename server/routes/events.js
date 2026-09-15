@@ -6,7 +6,7 @@ const router = express.Router();
 router.get("/events", getEvents);
 router.post("/events", userAuth, adminAuth, createEvents);
 router.get("/events/:id",  getEventsById);
-router.patch("/events/:id", updateEventsById);
+router.patch("/events/:id",userAuth, adminAuth, updateEventsById);
 router.delete("/events/:id",userAuth, adminAuth, deleteEvents)
 
 module.exports = router;
