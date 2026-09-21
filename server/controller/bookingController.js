@@ -4,7 +4,9 @@ const Events = require("../model/Events");
 const createBooking = async (req, res) => {
   try {
     const { eventId, seats } = req.body;
-
+    if(!(Number.isInteger(seats) && seats > 0)){
+return res.send("Invalid number of seats")
+    }
     const event = await Events.findById(eventId);
 
     if (!event) {
