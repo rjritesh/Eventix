@@ -71,14 +71,17 @@ const getMyBookingById = async (req, res) => {
 
 const cancelBooking = async (req, res) => {
   try {
-    const booking = await Booking.findById(req.params.id);
+    const booking = await Booking.findOne({
+      _id: req.params.id,
+      bookingBy: req.user._id
+    });
 
     if (!booking) {
       return res.send("Booking not found");
     }
 
     const event = await Events.findById(booking.event);
-
+     
     if (!event) {
       return res.send("Event not found");
     }
