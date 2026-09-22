@@ -2,7 +2,6 @@ const express = require("express");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
 const User = require("../model/User");
 
 const router = express.Router();
@@ -15,16 +14,17 @@ const SECRET_KEY = "mySecretKey";
 
 router.post("/signup", async (req, res) => {
   try {
+
     if (!req.body.firstName || !req.body.emailId || !req.body.password) {
-      return res.send("Required fields are missing");
+      return res.status(400).send("Required fields are missing");
     }
 
     if (!validator.isEmail(req.body.emailId)) {
-      return res.send("Email is not valid");
+      return res.status(400).send("Email is not valid");
     }
 
     if (!validator.isStrongPassword(req.body.password)) {
-      return res.send("Password is not valid!");
+      return res.status(400).send("Password is not valid!");
     }
 
     const existingUser = await User.findOne({
@@ -32,7 +32,7 @@ router.post("/signup", async (req, res) => {
     });
 
     if (existingUser !== null) {
-      return res.send("User already exists");
+      return res.status(409).send("User already exists");
     }
 
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -41,12 +41,16 @@ router.post("/signup", async (req, res) => {
 
     await User.create(req.body);
 
-    res.send("Signup successful");
+    res.status(201).send("Signup successful");
+
   } catch (error) {
+
     console.log(error);
-    res.send("Something went wrong");
+
+    res.status(500).send("Something went wrong");
   }
 });
+
 
 // --------------------
 // Login
@@ -54,44 +58,60 @@ router.post("/signup", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   try {
+
     const { emailId, password } = req.body;
 
     if (!emailId || !password) {
-      return res.send("Required field is missing");
+      return res.status(400).send("Required field is missing");
     }
 
     const user = await User.findOne({ emailId });
 
     if (!user) {
-      return res.send("User not found");
+      return res.status(401).send("Invalid email or password");
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      user.password
+    );
 
     if (!isPasswordValid) {
-      return res.send("Password is not valid.");
+      return res.status(401).send("Invalid email or password");
     }
 
     const token = jwt.sign({ emailId }, SECRET_KEY);
 
     res.cookie("token", token);
 
-    return res.send({
-      message: "Login Successfull",
+    return res.status(200).send({
+      message: "Login Successful",
       token: token,
     });
+
   } catch (error) {
-    return res.send("something went wrong");
+
+    return res.status(500).send("Something went wrong");
   }
 });
 
-router.post("/logout",  (req, res) => {
+
+// --------------------
+// Logout
+// --------------------
+
+router.post("/logout", (req, res) => {
   try {
+
     res.clearCookie("token");
-    res.send("Logout successful");
+
+    res.status(200).send("Logout successful");
+
   } catch (error) {
-    res.send(error)
+
+    res.status(500).send("Something went wrong");
   }
 });
+
 
 module.exports = router;
