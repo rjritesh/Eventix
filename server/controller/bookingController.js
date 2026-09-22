@@ -1,20 +1,27 @@
 const Booking = require("../model/Bookings");
+
 const Events = require("../model/Events");
 
 const createBooking = async (req, res) => {
   try {
     const { eventId, seats } = req.body;
-    if(!(Number.isInteger(seats) && seats > 0)){
-return res.send("Invalid number of seats")
+
+    // 400 → Invalid input
+    if (!(Number.isInteger(seats) && seats > 0)) {
+      return res.status(400).send("Invalid number of seats");
     }
+
     const event = await Events.findById(eventId);
 
+    // 404 → Event doesn't exist
     if (!event) {
-      return res.send("Event not found");
+      return res.status(404).send("Event not found");
     }
 
+    // 400 → Request cannot be fulfilled because
+    // requested seats are more than available seats
     if (event.availableSeats < seats) {
-      return res.send("Not enough seats available");
+      return res.status(400).send("Not enough seats available");
     }
 
     const booking = await Booking.create({
@@ -27,14 +34,19 @@ return res.send("Invalid number of seats")
 
     await event.save();
 
-    res.send(booking);
+    // 201 → New booking created
+    res.status(201).send(booking);
+
   } catch (error) {
-    res.send({
+
+    // 500 → Unexpected server/database error
+    res.status(500).send({
       message: "Booking failed",
       error: error.message,
     });
   }
 };
+
 
 const getMyBookings = async (req, res) => {
   try {
@@ -42,14 +54,19 @@ const getMyBookings = async (req, res) => {
       bookingBy: req.user._id,
     });
 
-    res.send(bookings);
+    // 200 → Successfully fetched bookings
+    res.status(200).send(bookings);
+
   } catch (error) {
-    res.send({
+
+    // 500 → Server/database error
+    res.status(500).send({
       message: "Failed to get bookings",
       error: error.message,
     });
   }
 };
+
 
 const getMyBookingById = async (req, res) => {
   try {
@@ -57,16 +74,22 @@ const getMyBookingById = async (req, res) => {
 
     const mybooking = await Booking.findOne({
       _id: id,
-      bookingBy: req.user._id
+      bookingBy: req.user._id,
     });
 
+    // 404 → Booking doesn't exist
+    // OR booking doesn't belong to current user
     if (!mybooking) {
-      return res.send("Booking not found");
+      return res.status(404).send("Booking not found");
     }
 
-    res.send(mybooking);
+    // 200 → Successfully fetched booking
+    res.status(200).send(mybooking);
+
   } catch (error) {
-    res.send("Booking not found");
+
+    // 404 → Invalid/non-existing booking
+    return res.status(404).send("Booking not found");
   }
 };
 
@@ -75,17 +98,20 @@ const cancelBooking = async (req, res) => {
   try {
     const booking = await Booking.findOne({
       _id: req.params.id,
-      bookingBy: req.user._id
+      bookingBy: req.user._id,
     });
 
+    // 404 → Booking doesn't exist
+    // OR booking doesn't belong to current user
     if (!booking) {
-      return res.send("Booking not found");
+      return res.status(404).send("Booking not found");
     }
 
     const event = await Events.findById(booking.event);
-     
+
+    // 404 → Event doesn't exist
     if (!event) {
-      return res.send("Event not found");
+      return res.status(404).send("Event not found");
     }
 
     event.availableSeats = event.availableSeats + booking.seats;
@@ -94,17 +120,23 @@ const cancelBooking = async (req, res) => {
 
     await Booking.findByIdAndDelete(req.params.id);
 
-    res.send("Booking cancelled successfully");
+    // 200 → Booking successfully cancelled
+    res.status(200).send("Booking cancelled successfully");
 
   } catch (error) {
-    res.send({
+
+    // 500 → Server/database error
+    res.status(500).send({
       message: "Failed to cancel booking",
-      error: error.message
+      error: error.message,
     });
   }
 };
 
+
 module.exports = {
   createBooking,
-  getMyBookings,getMyBookingById, cancelBooking
+  getMyBookings,
+  getMyBookingById,
+  cancelBooking,
 };
