@@ -79,6 +79,11 @@ const getEventsById = async (req, res) => {
 const updateEventsById = async (req, res) => {
   try {
     const { id } = req.params;
+
+    const {
+      ticketPrice
+    } = req.body;
+
     const allowedFields = [
       "title",
       "description",
@@ -88,28 +93,42 @@ const updateEventsById = async (req, res) => {
       "ticketPrice",
       "image",
     ];
+
     const updatedData = {};
+
     const keys = Object.keys(req.body);
 
     for (const key of keys) {
-      if (allowedFields.inlcludes(key)) {
+      if (allowedFields.includes(key)) {
         updatedData[key] = req.body[key];
       }
     }
 
-    const event = await Events.findByIdAndUpdate(id, req.body, {
-      returnDocument: "after",
-    });
+    if (ticketPrice !== undefined) {
+      if (typeof ticketPrice !== "number") {
+        return res.status(400).send("Ticket price must be a number");
+      }
+
+      if (ticketPrice < 0) {
+        return res.status(400).send("Ticket price cannot be negative");
+      }
+    }
+
+    const event = await Events.findByIdAndUpdate(
+      id,
+      updatedData,
+      {
+        returnDocument: "after",
+      }
+    );
 
     if (!event) {
-      // 404 → Event doesn't exist
       return res.status(404).send("Event not found");
     }
 
-    // 200 → Successfully updated
     res.status(200).send(event);
+
   } catch (error) {
-    // 500 → Server/database error
     res.status(500).send({
       message: "Update failed!",
       error: error.message,
