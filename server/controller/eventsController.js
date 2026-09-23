@@ -10,7 +10,6 @@ const getEvents = async (req, res) => {
 
     // 200 → Successfully fetched events
     res.status(200).send(events);
-
   } catch (error) {
     // 500 → Server/database error
     res.status(500).send({
@@ -19,7 +18,6 @@ const getEvents = async (req, res) => {
     });
   }
 };
-
 
 const createEvents = async (req, res) => {
   try {
@@ -48,7 +46,6 @@ const createEvents = async (req, res) => {
 
     // 201 → Event created
     res.status(201).send(event);
-
   } catch (error) {
     console.log("error", error);
 
@@ -59,7 +56,6 @@ const createEvents = async (req, res) => {
     });
   }
 };
-
 
 const getEventsById = async (req, res) => {
   try {
@@ -74,26 +70,36 @@ const getEventsById = async (req, res) => {
 
     // 200 → Successfully fetched event
     res.status(200).send(event);
-
   } catch (error) {
     // 404 → Invalid/non-existing event ID
     res.status(404).send("Event not found");
   }
 };
 
-
 const updateEventsById = async (req, res) => {
   try {
     const { id } = req.params;
+    const allowedFields = [
+      "title",
+      "description",
+      "date",
+      "location",
+      "category",
+      "ticketPrice",
+      "image",
+    ];
+    const updatedData = {};
+    const keys = Object.keys(req.body);
 
-    console.log(req.params);
-    console.log(req.body);
+    for (const key of keys) {
+      if (allowedFields.inlcludes(key)) {
+        updatedData[key] = req.body[key];
+      }
+    }
 
-    const event = await Events.findByIdAndUpdate(
-      id,
-      req.body,
-      { returnDocument: "after" }
-    );
+    const event = await Events.findByIdAndUpdate(id, req.body, {
+      returnDocument: "after",
+    });
 
     if (!event) {
       // 404 → Event doesn't exist
@@ -102,7 +108,6 @@ const updateEventsById = async (req, res) => {
 
     // 200 → Successfully updated
     res.status(200).send(event);
-
   } catch (error) {
     // 500 → Server/database error
     res.status(500).send({
@@ -111,7 +116,6 @@ const updateEventsById = async (req, res) => {
     });
   }
 };
-
 
 const deleteEvents = async (req, res) => {
   try {
@@ -126,7 +130,6 @@ const deleteEvents = async (req, res) => {
 
     // 200 → Successfully deleted
     res.status(200).send("Event deleted successfully");
-
   } catch (error) {
     // 500 → Server/database error
     res.status(500).send({
@@ -135,7 +138,6 @@ const deleteEvents = async (req, res) => {
     });
   }
 };
-
 
 module.exports = {
   getEvents,
