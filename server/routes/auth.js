@@ -6,7 +6,7 @@ const User = require("../model/User");
 
 const router = express.Router();
 
-const SECRET_KEY = "mySecretKey";
+const SECRET_KEY = process.env.SECRET_KEY;
 
 // --------------------
 // Signup
