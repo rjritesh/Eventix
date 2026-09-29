@@ -80,7 +80,7 @@ router.post("/login", async (req, res) => {
       return res.status(401).send("Invalid email or password");
     }
 
-    const token = jwt.sign({ emailId }, SECRET_KEY);
+    const token = jwt.sign({ emailId }, SECRET_KEY, {expiresIn: "1h"});
 
     res.cookie("token", token);
 
