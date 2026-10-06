@@ -1,14 +1,18 @@
 
-import Footer from './components/Footer'
-import Home from './pages/Home'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import Home from "./pages/Home";
+import Events from "./pages/Events";
 
 const App = () => {
   return (
-    <div className='bg-amber-700'>
-    <Home></Home>
-    <Footer></Footer>
-    </div>
-  )
-}
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/events" element={<Events />} />
+      </Routes>
+    </BrowserRouter>
+  );
+};
 
-export default App
+export default App;
