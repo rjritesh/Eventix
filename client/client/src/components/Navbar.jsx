@@ -1,7 +1,7 @@
 
 const Navbar = () => {
   return (
-    <header className="border-b border-(--border) bg-(--background)">
+   <header className="sticky top-0 z-50 border-b border-white/10 bg-[var(--background)]/60 backdrop-blur-xl">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <a
