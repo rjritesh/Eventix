@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
@@ -13,26 +14,26 @@ const Navbar = () => {
 
         {/* Desktop Navigation */}
         <div className="hidden items-center gap-8 md:flex">
-          <a
-            href="/"
+          <Link
+            to="/"
             className="text-sm font-medium text-(--text-primary) transition hover:text-(--primary)"
           >
             Home 
-          </a>
+          </Link>
 
-          <a
-            href="/events"
+          <Link
+            to="/events"
             className="text-sm font-medium text-(--text-secondary) transition hover:text-(--primary)"
           >
             Events
-          </a>
+          </Link>
 
-          <a
-            href="/bookings"
+          <Link
+            to="/bookings"
             className="text-sm font-medium text-(--text-secondary) transition hover:text-(--primary)"
           >
             My Bookings
-          </a>
+          </Link>
         </div>
 
         {/* Desktop Auth */}
