@@ -1,8 +1,10 @@
+import { Link } from "react-router-dom";
 
 const events = [
   {
     title: "Live Music Festival",
-    description: "A night of live music, great artists and unforgettable energy.",
+    description:
+      "A night of live music, great artists and unforgettable energy.",
     date: "OCT 24 · 2026",
     location: "Mumbai",
     category: "Music",
@@ -14,7 +16,8 @@ const events = [
   },
   {
     title: "Tech & Innovation Conference",
-    description: "Explore emerging technology, ideas and the future of innovation.",
+    description:
+      "Explore emerging technology, ideas and the future of innovation.",
     date: "NOV 02 · 2026",
     location: "Bengaluru",
     category: "Technology",
@@ -88,21 +91,48 @@ const Events = () => {
   return (
     <main className="min-h-screen bg-[var(--background)]">
       {/* Header */}
-      <section className="border-b border-[var(--border)]">
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--primary)]">
-            Events
-          </p>
+      <section className="relative overflow-hidden border-b border-[var(--border)]">
+      
+        {/* Ambient glow */}
+        <div className="pointer-events-none absolute left-1/2 top-[-300px] h-[600px] w-[600px] -translate-x-1/2 rounded-full bg-violet-600/10 blur-[150px]" />
 
-          <div className="mt-4 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <h1 className="max-w-3xl text-4xl font-semibold tracking-[-0.04em] text-[var(--text-primary)] sm:text-5xl lg:text-6xl">
-              Discover something worth experiencing.
-            </h1>
+        <div className="relative mx-auto max-w-7xl px-4 pb-16 pt-20 sm:px-6 lg:px-8 lg:pb-20 lg:pt-28">
+            {/* <Link
+          to="/"
+          className="group mb-8 inline-flex items-center gap-2 text-sm text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
+        >
+          <span className="text-lg transition-transform duration-200 group-hover:-translate-x-1">
+            ←
+          </span>
+          <span>Back</span>
+        </Link> */}
+          <div className="flex flex-col justify-between gap-10 lg:flex-row lg:items-end">
+            {/* Heading */}
+            <div className="max-w-4xl">
+              <div className="mb-6 flex items-center gap-3">
+                <span className="h-px w-8 bg-[var(--primary)]" />
 
-            <p className="max-w-md text-sm leading-6 text-[var(--text-secondary)] sm:text-base">
-              Explore concerts, conferences, sports, workshops and more.
-              Find your next experience.
-            </p>
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--primary)]">
+                  Discover
+                </p>
+              </div>
+
+              <h1 className="text-5xl font-semibold leading-[0.95] tracking-[-0.055em] text-[var(--text-primary)] sm:text-6xl lg:text-8xl">
+                Find your
+                <br />
+                <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-blue-400 bg-clip-text text-transparent">
+                  next experience.
+                </span>
+              </h1>
+            </div>
+
+            {/* Description */}
+            <div className="max-w-sm lg:pb-2">
+              <p className="text-sm leading-7 text-[var(--text-secondary)] sm:text-base">
+                Explore experiences worth showing up for - from live music and
+                sports to technology, culture and ideas.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -111,7 +141,6 @@ const Events = () => {
       <section className="border-b border-[var(--border)]">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-
             {/* Search */}
             <div className="relative w-full lg:max-w-sm">
               <input
@@ -144,7 +173,6 @@ const Events = () => {
       {/* Events */}
       <section>
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
-
           <div className="mb-8 flex items-center justify-between">
             <p className="text-sm text-[var(--text-secondary)]">
               Showing {events.length} events
@@ -219,4 +247,3 @@ const Events = () => {
 };
 
 export default Events;
-
