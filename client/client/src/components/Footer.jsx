@@ -97,35 +97,38 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Bottom */}
-        <div className="mt-16 flex flex-col gap-4 border-t border-[var(--border)] pt-6 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-xs text-[var(--text-secondary)]">
-            © 2026 Eventix. All rights reserved.
-          </p>
+  
+{/* Bottom */}
+<div className="mt-16 flex flex-col gap-4 border-t border-[var(--border)] pt-6 sm:flex-row sm:items-center sm:justify-between">
+  <p className="text-xs text-[var(--text-secondary)]">
+    © 2026 Eventix · Built by Ritesh Jha
+  </p>
 
-          <div className="flex gap-6">
-            <a
-              href="/privacy"
-              className="text-xs text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
-            >
-              Privacy
-            </a>
+  <div className="flex gap-6">
+    <a
+      href="/privacy"
+      className="text-xs text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
+    >
+      Privacy
+    </a>
 
-            <a
-              href="/terms"
-              className="text-xs text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
-            >
-              Terms
-            </a>
+    <a
+      href="/terms"
+      className="text-xs text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
+    >
+      Terms
+    </a>
 
-            <a
-              href="/contact"
-              className="text-xs text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
-            >
-              Contact
-            </a>
-          </div>
-        </div>
+    <a
+      href="/contact"
+      className="text-xs text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
+    >
+      Contact
+    </a>
+  </div>
+</div>
+
+
       </div>
     </footer>
   );
