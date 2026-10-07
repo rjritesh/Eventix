@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const events = [
@@ -88,6 +89,9 @@ const categories = [
 ];
 
 const Events = () => {
+  const [searchEvents, setSearchEvents] = useState("")
+  const [selectCategory, setSelectCategory] = useState("All")
+  const filteredEvents = events.filter((event)=>event.title.toLowerCase().includes(searchEvents.toLocaleLowerCase()) && (selectCategory === "All" || event.category === selectCategory))
   return (
     <main className="min-h-screen bg-[var(--background)]">
       {/* Header */}
@@ -145,6 +149,8 @@ const Events = () => {
             <div className="relative w-full lg:max-w-sm">
               <input
                 type="text"
+                value={searchEvents}
+                onChange={(e)=>setSearchEvents(e.target.value)}
                 placeholder="Search events..."
                 className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-secondary)] focus:border-[var(--primary)]"
               />
@@ -161,7 +167,7 @@ const Events = () => {
                       ? "border-[var(--primary)] bg-[var(--primary)] text-white"
                       : "border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--primary)] hover:text-[var(--text-primary)]"
                   }`}
-                >
+              onClick={()=>setSelectCategory(category)}  >
                   {category}
                 </button>
               ))}
@@ -173,14 +179,10 @@ const Events = () => {
       {/* Events */}
       <section>
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
-          <div className="mb-8 flex items-center justify-between">
-            <p className="text-sm text-[var(--text-secondary)]">
-              Showing {events.length} events
-            </p>
-          </div>
+      
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {events.map((event) => (
+            {filteredEvents.map((event) => (
               <article
                 key={event.title}
                 className="group overflow-hidden rounded-2xl border border-white/10 bg-[var(--surface)] transition-all duration-300 hover:-translate-y-1 hover:border-violet-500/40 hover:shadow-2xl hover:shadow-violet-950/20"
