@@ -76,6 +76,19 @@ const events = [
       "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=900&q=80",
     ticketPrice: 699,
   },
+    {
+    title: "Retro jamm Music Festival",
+    description:
+      "A day of live music, great artists and unforgettable energy.",
+    date: "May 12 · 2026",
+    location: "Pune",
+    category: "Music",
+    totalSeats: 500,
+    availableSeats: 124,
+    image:
+      "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=900&q=80",
+    ticketPrice: 4299,
+  },
 ];
 
 const categories = [
@@ -162,8 +175,8 @@ const Events = () => {
                 <button
                   key={category}
                   type="button"
-                  className={`whitespace-nowrap rounded-full border px-4 py-2 text-xs font-medium transition-colors ${
-                    index === 0
+                  className={`whitespace-nowrap rounded-full border px-4 py-2 text-xs font-medium transition-colors cursor-pointer  ${
+                    selectCategory === category
                       ? "border-[var(--primary)] bg-[var(--primary)] text-white"
                       : "border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--primary)] hover:text-[var(--text-primary)]"
                   }`}
