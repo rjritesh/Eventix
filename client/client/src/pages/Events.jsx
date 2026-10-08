@@ -4,6 +4,7 @@ import NoEventsFound from "../components/NoEventsFound";
 
 const events = [
   {
+    id: 1,
     title: "Live Music Festival",
     description:
       "A night of live music, great artists and unforgettable energy.",
@@ -17,6 +18,7 @@ const events = [
     ticketPrice: 1299,
   },
   {
+    id: 2,
     title: "Tech & Innovation Conference",
     description:
       "Explore emerging technology, ideas and the future of innovation.",
@@ -30,6 +32,7 @@ const events = [
     ticketPrice: 999,
   },
   {
+    id: 3,
     title: "Art & Culture Experience",
     description: "A celebration of art, creativity and local culture.",
     date: "NOV 15 · 2026",
@@ -42,6 +45,7 @@ const events = [
     ticketPrice: 799,
   },
   {
+    id: 4,
     title: "Championship Night",
     description: "Experience the excitement of live competitive sports.",
     date: "NOV 21 · 2026",
@@ -54,8 +58,10 @@ const events = [
     ticketPrice: 1499,
   },
   {
+    id: 5,
     title: "Business Leaders Summit",
-    description: "Connect with ambitious minds, founders and industry leaders.",
+    description:
+      "Connect with ambitious minds, founders and industry leaders.",
     date: "DEC 05 · 2026",
     location: "Hyderabad",
     category: "Business",
@@ -66,6 +72,7 @@ const events = [
     ticketPrice: 1199,
   },
   {
+    id: 6,
     title: "Creative Design Workshop",
     description: "Learn, create and explore new ways of thinking.",
     date: "DEC 12 · 2026",
@@ -77,7 +84,8 @@ const events = [
       "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=900&q=80",
     ticketPrice: 699,
   },
-    {
+  {
+    id: 7,
     title: "Retro jamm Music Festival",
     description:
       "A day of live music, great artists and unforgettable energy.",
@@ -200,7 +208,7 @@ const Events = () => {
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
 
       {filteredEvents.map((event) => (
-        <article
+        <Link to={`/events/${event.id}`}
           key={event.title}
           className="group overflow-hidden rounded-2xl border border-white/10 bg-[var(--surface)] transition-all duration-300 hover:-translate-y-1 hover:border-violet-500/40 hover:shadow-2xl hover:shadow-violet-950/20"
         >
@@ -256,7 +264,7 @@ const Events = () => {
               </p>
             </div>
           </div>
-        </article>
+        </Link>
       ))}
     </div>
   )}

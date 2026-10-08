@@ -5,6 +5,7 @@ import Footer from "./components/Footer";
 
 import Home from "./pages/Home";
 import Events from "./pages/Events";
+import EventDetails from "./pages/EventDetails";
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/events" element={<Events />} />
+        <Route path="/events/:id" element= {<EventDetails/> }/>
       </Routes>
 
       <Footer />
