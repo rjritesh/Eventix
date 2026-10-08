@@ -1,5 +1,6 @@
 import BrowseByCategory from "../components/BrowseByCategory";
 import FeaturedEvents from "../components/FeaturedEvents";
+import GetInTouch from "../components/GetInTouch";
 import Hero from "../components/Hero";
 const Home = () => {
   return (
@@ -8,6 +9,7 @@ const Home = () => {
       <Hero></Hero>
       <FeaturedEvents></FeaturedEvents>
       <BrowseByCategory></BrowseByCategory>
+      <GetInTouch></GetInTouch>
     </>
   );
 };
