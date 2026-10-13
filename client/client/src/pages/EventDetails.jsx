@@ -1,19 +1,10 @@
-const EventDetails = () => {
-  const event = {
-    title: "Live Music Festival",
-    description:
-      "A night of live music, great artists and unforgettable energy. Experience incredible performances, connect with fellow music lovers, and enjoy an unforgettable evening.",
-    date: "OCT 24 · 2026",
-    time: "7:00 PM onwards",
-    location: "Mumbai, Maharashtra",
-    category: "Music",
-    availableSeats: 124,
-    totalSeats: 500,
-    ticketPrice: 1299,
-    image:
-      "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1600&q=85",
-  };
+import { useParams, Link } from "react-router-dom";
+import { data } from "../data/Events";
 
+const EventDetails = () => {
+  const {id} = useParams()
+
+const event = data.find((event)=> event.id === Number(id))
   return (
     <main className="min-h-screen bg-[var(--background)]">
       {/* Hero */}
@@ -22,15 +13,15 @@ const EventDetails = () => {
 
         <div className="relative mx-auto max-w-7xl px-4 pb-12 pt-8 sm:px-6 lg:px-8 lg:pb-16">
           {/* Back */}
-          <a
-            href="/events"
+          <Link
+            to="/events"
             className="group mb-8 inline-flex items-center gap-2 text-sm text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
           >
             <span className="text-lg transition-transform duration-200 group-hover:-translate-x-1">
               ←
             </span>
             Back to events
-          </a>
+          </Link>
 
           {/* Image */}
           <div className="relative overflow-hidden rounded-2xl border border-white/10">
