@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import NoEventsFound from "../components/NoEventsFound";
-import {data} from "../data/Events"
+import { useEffect } from "react";
 
 const categories = [
   "All",
@@ -14,19 +14,37 @@ const categories = [
 ];
 
 const Events = () => {
-  const [searchEvents, setSearchEvents] = useState("")
-  const [selectCategory, setSelectCategory] = useState("All")
-  const filteredEvents = data.filter((event)=>event.title.toLowerCase().includes(searchEvents.toLocaleLowerCase()) && (selectCategory === "All" || event.category === selectCategory))
+  const [searchEvents, setSearchEvents] = useState("");
+  const [selectCategory, setSelectCategory] = useState("All");
+   const [events, setEvents] = useState([]);
+   
+  const filteredEvents = events.filter(
+    (event) =>
+      event.title.toLowerCase().includes(searchEvents.toLocaleLowerCase()) &&
+      (selectCategory === "All" || event.category === selectCategory),
+  );
+ 
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      const res = await fetch("http://localhost:2000/api/events");
+      const data = await res.json();
+      console.log(data);
+      setEvents(data);
+    };
+
+    fetchEvents();
+  }, []);
+
   return (
     <main className="min-h-screen bg-[var(--background)]">
       {/* Header */}
       <section className="relative overflow-hidden border-b border-[var(--border)]">
-      
         {/* Ambient glow */}
         <div className="pointer-events-none absolute left-1/2 top-[-300px] h-[600px] w-[600px] -translate-x-1/2 rounded-full bg-violet-600/10 blur-[150px]" />
 
         <div className="relative mx-auto max-w-7xl px-4 pb-16 pt-20 sm:px-6 lg:px-8 lg:pb-20 lg:pt-28">
-            {/* <Link
+          {/* <Link
           to="/"
           className="group mb-8 inline-flex items-center gap-2 text-sm text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
         >
@@ -75,7 +93,7 @@ const Events = () => {
               <input
                 type="text"
                 value={searchEvents}
-                onChange={(e)=>setSearchEvents(e.target.value)}
+                onChange={(e) => setSearchEvents(e.target.value)}
                 placeholder="Search events..."
                 className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-secondary)] focus:border-[var(--primary)]"
               />
@@ -92,7 +110,8 @@ const Events = () => {
                       ? "border-[var(--primary)] bg-[var(--primary)] text-white"
                       : "border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--primary)] hover:text-[var(--text-primary)]"
                   }`}
-              onClick={()=>setSelectCategory(category)}  >
+                  onClick={() => setSelectCategory(category)}
+                >
                   {category}
                 </button>
               ))}
@@ -103,75 +122,74 @@ const Events = () => {
 
       {/* Events */}
       <section>
-<div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+          {filteredEvents.length === 0 ? (
+            <NoEventsFound />
+          ) : (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {filteredEvents.map((event) => (
+                <Link
+                  to={`/events/${event.id}`}
+                  key={event._id}
+                  className="group overflow-hidden rounded-2xl border border-white/10 bg-[var(--surface)] transition-all duration-300 hover:-translate-y-1 hover:border-violet-500/40 hover:shadow-2xl hover:shadow-violet-950/20"
+                >
+                  {/* Image */}
+                  <div className="relative overflow-hidden">
+                    <img
+                      src={event.image || null}
+                      alt={event.title}
+                      className="h-64 w-full object-cover transition duration-700 group-hover:scale-105"
+                    />
 
-  {filteredEvents.length === 0 ? (
-    <NoEventsFound />
-  ) : (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
 
-      {filteredEvents.map((event) => (
-        <Link to={`/events/${event.id}`}
-          key={event.title}
-          className="group overflow-hidden rounded-2xl border border-white/10 bg-[var(--surface)] transition-all duration-300 hover:-translate-y-1 hover:border-violet-500/40 hover:shadow-2xl hover:shadow-violet-950/20"
-        >
-          {/* Image */}
-          <div className="relative overflow-hidden">
-            <img
-              src={event.image}
-              alt={event.title}
-              className="h-64 w-full object-cover transition duration-700 group-hover:scale-105"
-            />
+                    {/* Category */}
+                    <span className="absolute left-4 top-4 rounded-full border border-white/20 bg-black/40 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-white backdrop-blur-md">
+                      {event.category}
+                    </span>
 
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                    {/* Date */}
+                    <span className="absolute bottom-4 left-4 rounded-full border border-white/20 bg-black/40 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-white backdrop-blur-md">
+                      {event.date}
+                    </span>
+                  </div>
 
-            {/* Category */}
-            <span className="absolute left-4 top-4 rounded-full border border-white/20 bg-black/40 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-white backdrop-blur-md">
-              {event.category}
-            </span>
+                  {/* Content */}
+                  <div className="p-6">
+                    <h2 className="text-xl font-semibold tracking-tight text-[var(--text-primary)]">
+                      {event.title}
+                    </h2>
 
-            {/* Date */}
-            <span className="absolute bottom-4 left-4 rounded-full border border-white/20 bg-black/40 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-white backdrop-blur-md">
-              {event.date}
-            </span>
-          </div>
+                    <p className="mt-3 line-clamp-2 text-sm leading-6 text-[var(--text-secondary)]">
+                      {event.description}
+                    </p>
 
-          {/* Content */}
-          <div className="p-6">
-            <h2 className="text-xl font-semibold tracking-tight text-[var(--text-primary)]">
-              {event.title}
-            </h2>
+                    <div className="mt-4 flex items-center gap-2 text-sm text-[var(--text-secondary)]">
+                      <span className="text-[var(--primary)]">●</span>
+                      {event.location}
+                    </div>
 
-            <p className="mt-3 line-clamp-2 text-sm leading-6 text-[var(--text-secondary)]">
-              {event.description}
-            </p>
+                    <div className="mt-5 flex items-center justify-between border-t border-white/10 pt-5">
+                      <div>
+                        <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--text-secondary)]">
+                          Starting from
+                        </p>
 
-            <div className="mt-4 flex items-center gap-2 text-sm text-[var(--text-secondary)]">
-              <span className="text-[var(--primary)]">●</span>
-              {event.location}
+                        <p className="mt-1 text-base font-semibold text-[var(--text-primary)]">
+                          ₹{event.ticketPrice}
+                        </p>
+                      </div>
+
+                      <p className="text-xs text-[var(--text-secondary)]">
+                        {event.availableSeats} seats left
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+              ))}
             </div>
-
-            <div className="mt-5 flex items-center justify-between border-t border-white/10 pt-5">
-              <div>
-                <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--text-secondary)]">
-                  Starting from
-                </p>
-
-                <p className="mt-1 text-base font-semibold text-[var(--text-primary)]">
-                  ₹{event.ticketPrice}
-                </p>
-              </div>
-
-              <p className="text-xs text-[var(--text-secondary)]">
-                {event.availableSeats} seats left
-              </p>
-            </div>
-          </div>
-        </Link>
-      ))}
-    </div>
-  )}
-</div>
+          )}
+        </div>
       </section>
     </main>
   );
