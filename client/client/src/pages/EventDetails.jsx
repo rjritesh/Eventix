@@ -1,10 +1,28 @@
 import { useParams, Link } from "react-router-dom";
-import { data } from "../data/Events";
+
+import { useEffect, useState } from "react";
 
 const EventDetails = () => {
-  const {id} = useParams()
+  const [eventDetails, setEventDetails] = useState([]);
 
-const event = data.find((event)=> event.id === Number(id))
+  const { id } = useParams();
+
+  useEffect(() => {
+    try {
+      const fetchEventDetails = async () => {
+        const res = await fetch(`http://localhost:2000/api/events/${id}`);
+        const eventDetails = await res.json();
+        console.log(eventDetails);
+        setEventDetails(eventDetails);
+      };
+      fetchEventDetails();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+
+
   return (
     <main className="min-h-screen bg-[var(--background)]">
       {/* Hero */}
@@ -26,8 +44,8 @@ const event = data.find((event)=> event.id === Number(id))
           {/* Image */}
           <div className="relative overflow-hidden rounded-2xl border border-white/10">
             <img
-              src={event.image}
-              alt={event.title}
+              src={eventDetails.image || null}
+              alt={eventDetails.title}
               className="h-[320px] w-full object-cover sm:h-[420px] lg:h-[520px]"
             />
 
@@ -35,7 +53,7 @@ const event = data.find((event)=> event.id === Number(id))
 
             <div className="absolute bottom-5 left-5 sm:bottom-8 sm:left-8">
               <span className="rounded-full border border-white/20 bg-black/40 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-white backdrop-blur-md">
-                {event.category}
+                {eventDetails.category}
               </span>
             </div>
           </div>
@@ -48,15 +66,15 @@ const event = data.find((event)=> event.id === Number(id))
           {/* Main content */}
           <div>
             <p className="mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-[var(--primary)]">
-              {event.date}
+              {eventDetails.date}
             </p>
 
             <h1 className="max-w-4xl text-4xl font-semibold leading-[0.95] tracking-[-0.045em] text-[var(--text-primary)] sm:text-5xl lg:text-7xl">
-              {event.title}
+              {eventDetails.title}
             </h1>
 
             <p className="mt-8 max-w-2xl text-base leading-8 text-[var(--text-secondary)]">
-              {event.description}
+              {eventDetails.description}
             </p>
 
             {/* Event information */}
@@ -67,7 +85,7 @@ const event = data.find((event)=> event.id === Number(id))
                 </p>
 
                 <p className="mt-2 text-sm font-medium text-[var(--text-primary)]">
-                  {event.date}
+                  {eventDetails.date}
                 </p>
               </div>
 
@@ -77,7 +95,7 @@ const event = data.find((event)=> event.id === Number(id))
                 </p>
 
                 <p className="mt-2 text-sm font-medium text-[var(--text-primary)]">
-                  {event.time}
+                  {eventDetails.time}
                 </p>
               </div>
 
@@ -87,7 +105,7 @@ const event = data.find((event)=> event.id === Number(id))
                 </p>
 
                 <p className="mt-2 text-sm font-medium text-[var(--text-primary)]">
-                  {event.location}
+                  {eventDetails.location}
                 </p>
               </div>
 
@@ -97,7 +115,7 @@ const event = data.find((event)=> event.id === Number(id))
                 </p>
 
                 <p className="mt-2 text-sm font-medium text-[var(--text-primary)]">
-                  {event.category}
+                  {eventDetails.category}
                 </p>
               </div>
             </div>
@@ -131,7 +149,7 @@ const event = data.find((event)=> event.id === Number(id))
                   </p>
 
                   <p className="mt-2 text-3xl font-semibold tracking-tight text-[var(--text-primary)]">
-                    ₹{event.ticketPrice}
+                    ₹{eventDetails.ticketPrice}
                   </p>
                 </div>
 
@@ -149,7 +167,7 @@ const event = data.find((event)=> event.id === Number(id))
                 </span>
 
                 <span className="text-sm font-semibold text-[var(--text-primary)]">
-                  {event.availableSeats}
+                  {eventDetails.availableSeats}
                 </span>
               </div>
 
@@ -158,14 +176,14 @@ const event = data.find((event)=> event.id === Number(id))
                   className="h-full rounded-full bg-[var(--primary)]"
                   style={{
                     width: `${
-                      (event.availableSeats / event.totalSeats) * 100
+                      (eventDetails.availableSeats / eventDetails.totalSeats) * 100
                     }%`,
                   }}
                 />
               </div>
 
               <p className="mt-2 text-xs text-[var(--text-secondary)]">
-                {event.totalSeats} total seats
+                {eventDetails.totalSeats} total seats
               </p>
 
               {/* Booking button */}

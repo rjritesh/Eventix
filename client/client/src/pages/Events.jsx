@@ -16,24 +16,27 @@ const categories = [
 const Events = () => {
   const [searchEvents, setSearchEvents] = useState("");
   const [selectCategory, setSelectCategory] = useState("All");
-   const [events, setEvents] = useState([]);
-   
+  const [events, setEvents] = useState([]);
+
   const filteredEvents = events.filter(
     (event) =>
       event.title.toLowerCase().includes(searchEvents.toLocaleLowerCase()) &&
       (selectCategory === "All" || event.category === selectCategory),
   );
- 
 
   useEffect(() => {
-    const fetchEvents = async () => {
-      const res = await fetch("http://localhost:2000/api/events");
-      const data = await res.json();
-      console.log(data);
-      setEvents(data);
-    };
+    try {
+      const fetchEvents = async () => {
+        const res = await fetch("http://localhost:2000/api/events");
+        const data = await res.json();
+        console.log(data);
+        setEvents(data);
+      };
 
-    fetchEvents();
+      fetchEvents();
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   return (
@@ -129,7 +132,7 @@ const Events = () => {
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {filteredEvents.map((event) => (
                 <Link
-                  to={`/events/${event.id}`}
+                  to={`/events/${event._id}`}
                   key={event._id}
                   className="group overflow-hidden rounded-2xl border border-white/10 bg-[var(--surface)] transition-all duration-300 hover:-translate-y-1 hover:border-violet-500/40 hover:shadow-2xl hover:shadow-violet-950/20"
                 >
