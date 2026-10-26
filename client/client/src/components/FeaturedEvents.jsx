@@ -1,42 +1,30 @@
-
-const featuredEvents = [
-  {
-    date: "OCT 24 · 2026",
-    title: "Live Music Festival",
-    location: "Mumbai",
-    category: "Music",
-    availableSeats: 124,
-    ticketPrice: 1299,
-    image:
-      "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=900&q=80",
-  },
-  {
-    date: "NOV 02 · 2026",
-    title: "Tech & Innovation Conference",
-    location: "Bengaluru",
-    category: "Technology",
-    availableSeats: 86,
-    ticketPrice: 999,
-    image:
-      "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=900&q=80",
-  },
-  {
-    date: "NOV 15 · 2026",
-    title: "Art & Culture Experience",
-    location: "Kolkata",
-    category: "Arts & Culture",
-    availableSeats: 42,
-    ticketPrice: 799,
-    image:
-      "https://images.unsplash.com/photo-1561214115-f2f134cc4912?auto=format&fit=crop&w=900&q=80",
-  },
-];
+import { useEffect, useState } from "react";
 
 const FeaturedEvents = () => {
+  const [featuredEvents, setFeaturedEvenet] = useState([]);
+
+useEffect(() => {
+  const fetchFeaturedEvents = async () => {
+    try {
+      const res = await fetch("http://localhost:2000/api/events/featured");
+
+      if (!res.ok) {
+        throw new Error("Failed to fetch featured events");
+      }
+      const events = await res.json();
+      setFeaturedEvenet(events);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  fetchFeaturedEvents();
+}, []);
+
+
   return (
     <section className="border-t border-[var(--border)] bg-[var(--background)]">
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
-
         {/* Section Header */}
         <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -54,7 +42,6 @@ const FeaturedEvents = () => {
             className="group flex w-fit items-center gap-3 border-b border-[var(--primary)] pb-2 text-sm font-medium text-[var(--text-primary)]"
           >
             View all events
-
             <span className="transition-transform duration-300 group-hover:translate-x-2">
               →
             </span>
@@ -68,7 +55,6 @@ const FeaturedEvents = () => {
               key={event.title}
               className="group overflow-hidden rounded-2xl border border-white/10 bg-[var(--surface)] transition-all duration-300 hover:-translate-y-1 hover:border-violet-500/40 hover:shadow-2xl hover:shadow-violet-950/20"
             >
-
               {/* Event Image */}
               <div className="relative overflow-hidden">
                 <img
@@ -97,7 +83,6 @@ const FeaturedEvents = () => {
 
               {/* Event Content */}
               <div className="p-6">
-
                 <h3 className="text-xl font-semibold tracking-tight text-[var(--text-primary)]">
                   {event.title}
                 </h3>
@@ -129,7 +114,6 @@ const FeaturedEvents = () => {
                     →
                   </span>
                 </div>
-
               </div>
             </article>
           ))}
@@ -140,4 +124,3 @@ const FeaturedEvents = () => {
 };
 
 export default FeaturedEvents;
-

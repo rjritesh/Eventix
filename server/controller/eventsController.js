@@ -19,6 +19,23 @@ const getEvents = async (req, res) => {
   }
 };
 
+
+const featuredEVents = async ( req, res )=>{
+  try{
+const featuredEVents = await Events.find({isFeatured: true});
+if(featuredEVents.length === 0 ){
+  return res.status(404).send("Events not found!")
+}
+res.status(200).send(featuredEVents)
+  }
+  catch(error){
+    res.status(500).send({
+      message: "Failed to load featured events.",
+      error: error.message,
+    })
+  }
+}
+
 const createEvents = async (req, res) => {
   try {
     const {
@@ -164,4 +181,5 @@ module.exports = {
   getEventsById,
   updateEventsById,
   deleteEvents,
+  featuredEVents
 };
