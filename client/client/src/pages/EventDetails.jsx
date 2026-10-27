@@ -1,27 +1,88 @@
-import { useParams, Link } from "react-router-dom";
 
+import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import Loader from "../components/Loader";
 
 const EventDetails = () => {
-  const [eventDetails, setEventDetails] = useState([]);
+  const [eventDetails, setEventDetails] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const { id } = useParams();
 
   useEffect(() => {
-    try {
-      const fetchEventDetails = async () => {
-        const res = await fetch(`http://localhost:2000/api/events/${id}`);
-        const eventDetails = await res.json();
-        console.log(eventDetails);
-        setEventDetails(eventDetails);
-      };
-      fetchEventDetails();
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+    const fetchEventDetails = async () => {
+      setIsLoading(true);
+      setError("");
 
+      try {
+        const res = await fetch(
+          `http://localhost:2000/api/events/${id}`
+        );
 
+        if (!res.ok) {
+          throw new Error("Failed to fetch event details");
+        }
+
+        const data = await res.json();
+        setEventDetails(data);
+      } catch (error) {
+        console.error(error);
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchEventDetails();
+  }, [id]);
+
+  if (isLoading) {
+    return <Loader />;
+  }
+
+  if (error || !eventDetails) {
+    return (
+      <main className="min-h-screen bg-[var(--background)] p-8 text-center">
+        <p className="text-[var(--text-primary)]">
+          {error || "Event not found"}
+        </p>
+
+        <Link
+          to="/events"
+          className="mt-4 inline-block text-[var(--primary)]"
+        >
+          Back to events
+        </Link>
+      </main>
+    );
+  }
+
+  const {
+    title,
+    description,
+    image,
+    category,
+    date,
+    time,
+    location,
+    ticketPrice,
+    availableSeats,
+    totalSeats,
+  } = eventDetails;
+
+  const formattedDate = date
+    ? new Date(date).toLocaleDateString("en-IN", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
+    : "Date not available";
+
+  const seatPercentage =
+    totalSeats > 0
+      ? Math.min((availableSeats / totalSeats) * 100, 100)
+      : 0;
 
   return (
     <main className="min-h-screen bg-[var(--background)]">
@@ -43,17 +104,21 @@ const EventDetails = () => {
 
           {/* Image */}
           <div className="relative overflow-hidden rounded-2xl border border-white/10">
-            <img
-              src={eventDetails.image || null}
-              alt={eventDetails.title}
-              className="h-[320px] w-full object-cover sm:h-[420px] lg:h-[520px]"
-            />
+            {image ? (
+              <img
+                src={image}
+                alt={title || "Event"}
+                className="h-[320px] w-full object-cover sm:h-[420px] lg:h-[520px]"
+              />
+            ) : (
+              <div className="h-[320px] w-full bg-[var(--surface)] sm:h-[420px] lg:h-[520px]" />
+            )}
 
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
             <div className="absolute bottom-5 left-5 sm:bottom-8 sm:left-8">
               <span className="rounded-full border border-white/20 bg-black/40 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-white backdrop-blur-md">
-                {eventDetails.category}
+                {category}
               </span>
             </div>
           </div>
@@ -66,15 +131,15 @@ const EventDetails = () => {
           {/* Main content */}
           <div>
             <p className="mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-[var(--primary)]">
-              {eventDetails.date}
+              {formattedDate}
             </p>
 
             <h1 className="max-w-4xl text-4xl font-semibold leading-[0.95] tracking-[-0.045em] text-[var(--text-primary)] sm:text-5xl lg:text-7xl">
-              {eventDetails.title}
+              {title}
             </h1>
 
             <p className="mt-8 max-w-2xl text-base leading-8 text-[var(--text-secondary)]">
-              {eventDetails.description}
+              {description}
             </p>
 
             {/* Event information */}
@@ -83,9 +148,8 @@ const EventDetails = () => {
                 <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--text-secondary)]">
                   Date
                 </p>
-
                 <p className="mt-2 text-sm font-medium text-[var(--text-primary)]">
-                  {eventDetails.date}
+                  {formattedDate}
                 </p>
               </div>
 
@@ -93,9 +157,8 @@ const EventDetails = () => {
                 <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--text-secondary)]">
                   Time
                 </p>
-
                 <p className="mt-2 text-sm font-medium text-[var(--text-primary)]">
-                  {eventDetails.time}
+                  {time || "Time not available"}
                 </p>
               </div>
 
@@ -103,9 +166,8 @@ const EventDetails = () => {
                 <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--text-secondary)]">
                   Location
                 </p>
-
                 <p className="mt-2 text-sm font-medium text-[var(--text-primary)]">
-                  {eventDetails.location}
+                  {location}
                 </p>
               </div>
 
@@ -113,9 +175,8 @@ const EventDetails = () => {
                 <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--text-secondary)]">
                   Category
                 </p>
-
                 <p className="mt-2 text-sm font-medium text-[var(--text-primary)]">
-                  {eventDetails.category}
+                  {category}
                 </p>
               </div>
             </div>
@@ -131,10 +192,7 @@ const EventDetails = () => {
               </h2>
 
               <p className="mt-5 max-w-2xl text-sm leading-7 text-[var(--text-secondary)]">
-                Join us for an exciting evening filled with music, energy and
-                unforgettable moments. Whether you're coming with friends or
-                discovering something new, this experience is designed to make
-                your night memorable.
+                {description}
               </p>
             </div>
           </div>
@@ -149,7 +207,7 @@ const EventDetails = () => {
                   </p>
 
                   <p className="mt-2 text-3xl font-semibold tracking-tight text-[var(--text-primary)]">
-                    ₹{eventDetails.ticketPrice}
+                    ₹{ticketPrice ?? "N/A"}
                   </p>
                 </div>
 
@@ -167,23 +225,19 @@ const EventDetails = () => {
                 </span>
 
                 <span className="text-sm font-semibold text-[var(--text-primary)]">
-                  {eventDetails.availableSeats}
+                  {availableSeats ?? "N/A"}
                 </span>
               </div>
 
               <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10">
                 <div
                   className="h-full rounded-full bg-[var(--primary)]"
-                  style={{
-                    width: `${
-                      (eventDetails.availableSeats / eventDetails.totalSeats) * 100
-                    }%`,
-                  }}
+                  style={{ width: `${seatPercentage}%` }}
                 />
               </div>
 
               <p className="mt-2 text-xs text-[var(--text-secondary)]">
-                {eventDetails.totalSeats} total seats
+                {totalSeats ?? "N/A"} total seats
               </p>
 
               {/* Booking button */}
