@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const FeaturedEvents = () => {
   const [featuredEvents, setFeaturedEvenet] = useState([]);
+
 
 useEffect(() => {
   const fetchFeaturedEvents = async () => {
@@ -51,9 +53,10 @@ useEffect(() => {
         {/* Event Grid */}
         <div className="mx-auto grid max-w-6xl gap-6 md:grid-cols-3">
           {featuredEvents.map((event) => (
-            <article
+            <Link
+            to={`/events/${event._id}`}
               key={event.title}
-              className="group overflow-hidden rounded-2xl border border-white/10 bg-[var(--surface)] transition-all duration-300 hover:-translate-y-1 hover:border-violet-500/40 hover:shadow-2xl hover:shadow-violet-950/20"
+              className="group cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-[var(--surface)] transition-all duration-300 hover:-translate-y-1 hover:border-violet-500/40 hover:shadow-2xl hover:shadow-violet-950/20"
             >
               {/* Event Image */}
               <div className="relative overflow-hidden">
@@ -115,7 +118,7 @@ useEffect(() => {
                   </span>
                 </div>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       </div>
