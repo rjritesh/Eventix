@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import NoEventsFound from "../components/NoEventsFound";
 import { useEffect } from "react";
+import Loader from "../components/Loader";
 
 const categories = [
   "All",
@@ -17,6 +18,7 @@ const Events = () => {
   const [searchEvents, setSearchEvents] = useState("");
   const [selectCategory, setSelectCategory] = useState("All");
   const [events, setEvents] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const filteredEvents = events.filter(
     (event) =>
@@ -24,20 +26,28 @@ const Events = () => {
       (selectCategory === "All" || event.category === selectCategory),
   );
 
-  useEffect(() => {
-    try {
-      const fetchEvents = async () => {
-        const res = await fetch("http://localhost:2000/api/events");
-        const data = await res.json();
-        console.log(data);
-        setEvents(data);
-      };
 
-      fetchEvents();
+useEffect(() => {
+  const fetchEvents = async () => {
+    try {
+      const res = await fetch("http://localhost:2000/api/events");
+
+      if (!res.ok) {
+        throw new Error("Failed to fetch events");
+      }
+
+      const data = await res.json();
+      setEvents(data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
+    } finally {
+      setIsLoading(false);
     }
-  }, []);
+  };
+
+  fetchEvents();
+}, []);
+
 
   return (
     <main className="min-h-screen bg-[var(--background)]">
@@ -126,7 +136,9 @@ const Events = () => {
       {/* Events */}
       <section>
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
-          {filteredEvents.length === 0 ? (
+          {isLoading ? (
+            <Loader />
+          ) : filteredEvents.length === 0 ? (
             <NoEventsFound />
           ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
