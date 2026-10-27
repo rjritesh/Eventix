@@ -47,7 +47,7 @@ const EventDetails = () => {
         <p className="text-[var(--text-primary)]">
           {error || "Event not found"}
         </p>
-
+ 
         <Link
           to="/events"
           className="mt-4 inline-block text-[var(--primary)]"
@@ -198,7 +198,7 @@ const EventDetails = () => {
           </div>
 
           {/* Booking card */}
-          <aside className="lg:sticky lg:top-28 lg:self-start">
+          <aside className=" lg:top-28 lg:self-start">
             <div className="rounded-2xl border border-white/10 bg-[var(--surface)] p-6 shadow-2xl shadow-black/20 sm:p-7">
               <div className="flex items-end justify-between gap-4">
                 <div>
