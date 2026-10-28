@@ -3,6 +3,14 @@ import { Link } from "react-router-dom";
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const [name, setName] = useState("");
+  const [emailId, setEmailId] = useState("");
+  const [password, setPassword] = useState("");
+
+
+const handleSubmit = (e)=>{
+e.preventDefault()
+}
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#080B14] px-4">
@@ -15,8 +23,9 @@ const Login = () => {
           Your next great experience starts here.
         </p>
 
-        <form>
-          {!isLogin && (    <div className="mb-5">
+        <form onSubmit={handleSubmit}>
+          {!isLogin && (
+            <div className="mb-5">
               <label
                 htmlFor="name"
                 className="mb-2 block text-sm font-medium text-[#F8FAFC]"
@@ -26,30 +35,37 @@ const Login = () => {
 
               <input
                 type="text"
+                value={name}
                 id="name"
                 name="name"
                 placeholder="John Doe"
                 className="w-full rounded-lg border border-[#252B3B] bg-[#171D2E] px-4 py-3 text-[#F8FAFC] placeholder:text-[#64748B] outline-none transition focus:border-[#7C3AED]"
+                onChange={(e) => {
+                  setName(e.target.value);
+                }}
               />
             </div>
-         
           )}
-   <div className="mb-5">
-              <label
-                htmlFor="emailId"
-                className="mb-2 block text-sm font-medium text-[#F8FAFC]"
-              >
-                Email Address
-              </label>
+          <div className="mb-5">
+            <label
+              htmlFor="emailId"
+              className="mb-2 block text-sm font-medium text-[#F8FAFC]"
+            >
+              Email Address
+            </label>
 
-              <input
-                type="email"
-                id="emailId"
-                name="emailId"
-                placeholder="you@example.com"
-                className="w-full rounded-lg border border-[#252B3B] bg-[#171D2E] px-4 py-3 text-[#F8FAFC] placeholder:text-[#64748B] outline-none transition focus:border-[#7C3AED]"
-              />
-            </div>
+            <input
+              type="email"
+              value={emailId}
+              id="emailId"
+              name="emailId"
+              placeholder="you@example.com"
+              className="w-full rounded-lg border border-[#252B3B] bg-[#171D2E] px-4 py-3 text-[#F8FAFC] placeholder:text-[#64748B] outline-none transition focus:border-[#7C3AED]"
+          onChange={(e)=>{
+setEmailId(e.target.value)
+          }}
+          />
+          </div>
           <div className="mb-6">
             <label
               htmlFor="password"
@@ -60,11 +76,15 @@ const Login = () => {
 
             <input
               type="password"
+              value={password}
               id="password"
               name="password"
               placeholder="Enter your password"
               className="w-full rounded-lg border border-[#252B3B] bg-[#171D2E] px-4 py-3 text-[#F8FAFC] placeholder:text-[#64748B] outline-none transition focus:border-[#7C3AED]"
-            />
+          onChange={(e)=>{
+            setPassword(e.target.value)
+          }}
+          />
           </div>
 
           <button
