@@ -32,7 +32,7 @@ const Login = () => {
     if (isLogin) {
       try {
         setIsLoading(true);
-        const response = await fetch("http://localhost:2000/api/login", {
+        const res = await fetch("http://localhost:2000/api/login", {
           method: "POST",
           headers: {
             "Content-type": "application/json",
@@ -43,12 +43,12 @@ const Login = () => {
             password,
           }),
         });
-        const data = await response.json();
+        const data = await res.json();
 
         if (!res.ok) {
           throw new Error(data.message || "Login failed");
         }
-        navigate("/");
+        navigate("/events");
       } catch (error) {
         setError(error.message || "Something went wrong");
       } finally {
