@@ -1,16 +1,63 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [name, setName] = useState("");
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
+  const navigate = useNavigate();
 
-const handleSubmit = (e)=>{
-e.preventDefault()
-}
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!emailId.trim()) {
+      alert("Please enter your email");
+      return;
+    }
+
+    if (!password.trim()) {
+      alert("Please enter your password");
+      return;
+    }
+
+    if (!isLogin && !name.trim()) {
+      alert("Please enter your name");
+      return;
+    }
+
+    if (isLogin) {
+      try {
+        setIsLoading(true);
+        const response = await fetch("http://localhost:2000/api/login", {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            emailId,
+            password,
+          }),
+        });
+        const data = await response.json();
+
+        if (!res.ok) {
+          throw new Error(data.message || "Login failed");
+        }
+        navigate("/");
+      } catch (error) {
+        setError(error.message || "Something went wrong");
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      // Signup logic
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#080B14] px-4">
@@ -61,10 +108,10 @@ e.preventDefault()
               name="emailId"
               placeholder="you@example.com"
               className="w-full rounded-lg border border-[#252B3B] bg-[#171D2E] px-4 py-3 text-[#F8FAFC] placeholder:text-[#64748B] outline-none transition focus:border-[#7C3AED]"
-          onChange={(e)=>{
-setEmailId(e.target.value)
-          }}
-          />
+              onChange={(e) => {
+                setEmailId(e.target.value);
+              }}
+            />
           </div>
           <div className="mb-6">
             <label
@@ -81,17 +128,17 @@ setEmailId(e.target.value)
               name="password"
               placeholder="Enter your password"
               className="w-full rounded-lg border border-[#252B3B] bg-[#171D2E] px-4 py-3 text-[#F8FAFC] placeholder:text-[#64748B] outline-none transition focus:border-[#7C3AED]"
-          onChange={(e)=>{
-            setPassword(e.target.value)
-          }}
-          />
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+            />
           </div>
 
           <button
             type="submit"
             className="w-full rounded-lg bg-[#7C3AED] py-3 font-semibold text-white transition hover:bg-[#6D28D9] cursor-pointer"
           >
-            {isLogin ? "Login" : "SignUp"}
+            {isLoading ? "Please wait..." : isLogin ? "Login" : "SignUp"}
           </button>
         </form>
 
@@ -106,6 +153,7 @@ setEmailId(e.target.value)
             Sign up
           </span>
         </p>
+        <p>{error}</p>
       </div>
     </div>
   );
