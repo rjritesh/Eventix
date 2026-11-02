@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import NoEventsFound from "../components/NoEventsFound";
-import { useEffect } from "react";
 import Loader from "../components/Loader";
 
 const categories = [
@@ -19,6 +18,7 @@ const Events = () => {
   const [selectCategory, setSelectCategory] = useState("All");
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [fetchError, setFetchError] = useState("");
 
   const filteredEvents = events.filter(
     (event) =>
@@ -27,26 +27,32 @@ const Events = () => {
   );
 
 
-useEffect(() => {
-  const fetchEvents = async () => {
-    try {
-      const res = await fetch("http://localhost:2000/api/events");
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const res = await fetch("http://localhost:2000/api/events", {
+          credentials: "include",
+        });
 
-      if (!res.ok) {
-        throw new Error("Failed to fetch events");
+        if (!res.ok) {
+          throw new Error(
+            res.status === 401
+              ? "Please log in to view events."
+              : `Failed to fetch events (HTTP ${res.status}). Please try again.`,
+          );
+        }
+
+        const data = await res.json();
+        setEvents(data);
+      } catch (error) {
+        setFetchError(error.message || "Unable to load events. Please try again.");
+      } finally {
+        setIsLoading(false);
       }
+    };
 
-      const data = await res.json();
-      setEvents(data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  fetchEvents();
-}, []);
+    fetchEvents();
+  }, []);
 
 
   return (
@@ -114,7 +120,7 @@ useEffect(() => {
 
             {/* Categories */}
             <div className="flex gap-2 overflow-x-auto pb-1">
-              {categories.map((category, index) => (
+              {categories.map((category) => (
                 <button
                   key={category}
                   type="button"
@@ -138,6 +144,10 @@ useEffect(() => {
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
           {isLoading ? (
             <Loader />
+          ) : fetchError ? (
+            <p role="alert" className="text-center text-[var(--text-secondary)]">
+              {fetchError}
+            </p>
           ) : filteredEvents.length === 0 ? (
             <NoEventsFound />
           ) : (
