@@ -60,7 +60,7 @@ const Navbar = () => {
                 Welcome, {user.firstName}
               </span>
 
-              <button className="rounded-lg bg-(--primary) px-4 py-2 text-sm font-semibold text-white" onClick={logoutHandler}>
+              <button className="rounded-lg bg-(--primary) px-4 py-2 text-sm cursor-pointer font-semibold text-white" onClick={logoutHandler}>
                 Logout
               </button>
             </>
