@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -9,6 +10,7 @@ const Login = () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const { setUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -44,7 +46,7 @@ const Login = () => {
           }),
         });
         const data = await res.json();
-
+        setUser(data.user);
         if (!res.ok) {
           throw new Error(data.message || "Login failed");
         }

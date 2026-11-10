@@ -1,8 +1,12 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 const Navbar = () => {
+  const { user } = useContext(AuthContext);
+
   return (
-   <header className="sticky top-0 z-50 border-b border-white/10 bg-[var(--background)]/60 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-[var(--background)]/60 backdrop-blur-xl">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <a
@@ -18,7 +22,7 @@ const Navbar = () => {
             to="/"
             className="text-sm font-medium text-(--text-primary) transition hover:text-(--primary)"
           >
-            Home 
+            Home
           </Link>
 
           <Link
@@ -38,19 +42,33 @@ const Navbar = () => {
 
         {/* Desktop Auth */}
         <div className="hidden items-center gap-3 md:flex">
-          <a
-            href="/login"
-            className="rounded-lg px-4 py-2 text-sm font-medium text-(--text-secondary) transition hover:text-(--text-primary)"
-          >
-            Login
-          </a>
+          {user ? (
+            <>
+              <span className="text-sm text-(--text-primary)">
+                Welcome, {user.firstName}
+              </span>
 
-          <a
-            href="/signup"
-            className="rounded-lg bg-(--primary) px-4 py-2 text-sm font-semibold text-white transition hover:bg-(--primary-hover)"
-          >
-            Get Started
-          </a>
+              <button className="rounded-lg bg-(--primary) px-4 py-2 text-sm font-semibold text-white">
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="rounded-lg px-4 py-2 text-sm font-medium text-(--text-secondary)"
+              >
+                Login
+              </Link>
+
+              <Link
+                to="/login"
+                className="rounded-lg bg-(--primary) px-4 py-2 text-sm font-semibold text-white"
+              >
+                Get Started
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -79,4 +97,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-

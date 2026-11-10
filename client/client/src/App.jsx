@@ -8,21 +8,24 @@ import Events from "./pages/Events";
 import EventDetails from "./pages/EventDetails";
 import ScrollToTop from "./components/ScrollToTop";
 import Login from "./pages/Login";
+import { AuthProvider } from "./context/AuthContext";
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <Navbar />
-      <ScrollToTop></ScrollToTop>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/events" element={<Events />} />
-        <Route path="/events/:id" element={<EventDetails />} />
-        <Route path = "/login" element = {<Login></Login>} />
-      </Routes>
+    <AuthProvider>
+      <BrowserRouter>
+        <Navbar />
+        <ScrollToTop></ScrollToTop>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/events" element={<Events />} />
+          <Route path="/events/:id" element={<EventDetails />} />
+          <Route path="/login" element={<Login></Login>} />
+        </Routes>
 
-      <Footer />
-    </BrowserRouter>
+        <Footer />
+      </BrowserRouter>
+    </AuthProvider>
   );
 };
 
