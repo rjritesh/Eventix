@@ -1,9 +1,21 @@
 import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 const Navbar = () => {
-  const { user } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
+  const navigate = useNavigate()
+
+
+  const logoutHandler = async ()=>{
+    try{
+      await logout();
+      navigate("/login")
+    }
+    catch(error){
+      console.log(error)
+    }
+  }
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[var(--background)]/60 backdrop-blur-xl">
@@ -48,7 +60,7 @@ const Navbar = () => {
                 Welcome, {user.firstName}
               </span>
 
-              <button className="rounded-lg bg-(--primary) px-4 py-2 text-sm font-semibold text-white">
+              <button className="rounded-lg bg-(--primary) px-4 py-2 text-sm font-semibold text-white" onClick={logoutHandler}>
                 Logout
               </button>
             </>

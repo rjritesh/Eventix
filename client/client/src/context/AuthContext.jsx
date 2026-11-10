@@ -1,4 +1,3 @@
-
 import { createContext, useState, useEffect } from "react";
 
 export const AuthContext = createContext();
@@ -29,8 +28,23 @@ export const AuthProvider = ({ children }) => {
     fetchUser();
   }, []);
 
+  const logout = async () => {
+    try {
+      const res = await fetch("http://localhost:2000/api/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+      if (!res.ok) {
+        throw new Error("Logout failed!!");
+      }
+      setUser(null);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider value={{ user, setUser, logout }}>
       {children}
     </AuthContext.Provider>
   );
